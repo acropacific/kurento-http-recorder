@@ -10,7 +10,7 @@ var fileServer = new static.Server(RECORDINGS_DIR);
 
 http.createServer(function(req, res) {
   switch (req.method) {
-    case 'PUT':
+    case 'POST':
       doPut(req, res);
       break;
     case 'GET':
