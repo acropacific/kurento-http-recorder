@@ -4,7 +4,7 @@ var http = require('http'),
     static = require('node-static'),
     sox = require('sox-stream');
 
-var PORT = 8897,
+var PORT = 80,
     RECORDINGS_DIR = '/tmp/recordings'; // CHANGE THIS
 
 var fileServer = new static.Server(RECORDINGS_DIR);
