@@ -1,4 +1,6 @@
 Command to start
 
 docker build -t buddhikajay/kurento-remote-recorder .
-docker run -p 8897:80 buddhikajay/kurento-remote-recorder -v /tmp<path>:/tmp/recordings
+
+docker run -v <host_folder>:/tmp/recordings -p <host_port>:80 buddhikajay/kurento-remote-recorder
+(eg : docker run -v /tmp:/tmp/recordings -p 8897:80 buddhikajay/kurento-remote-recorder)
