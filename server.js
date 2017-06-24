@@ -25,7 +25,7 @@ http.createServer(function(req, res) {
 });
 
 function getFilename(req) {
-  return "filename.webm"; // CHANGE THIS: convert request params to filename
+  return "filename.mp4"; // CHANGE THIS: convert request params to filename
 }
 
 function doPut(req, res) {
