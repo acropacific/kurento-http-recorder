@@ -2,9 +2,10 @@ var http = require('http'),
     fs = require('fs'),
     path = require('path'),
     static = require('node-static'),
+    ffmpeg =  require('fluent-ffmpeg'),
     sox = require('sox-stream');
 
-var PORT = 80,
+var PORT = 8897,
     RECORDINGS_DIR = '/tmp/recordings'; // CHANGE THIS
 
 var fileServer = new static.Server(RECORDINGS_DIR);
@@ -25,7 +26,7 @@ http.createServer(function(req, res) {
 });
 
 function getFilename(req) {
-  return "filename.mp4"; // CHANGE THIS: convert request params to filename
+  return "filename.wav"; // CHANGE THIS: convert request params to filename
 }
 
 function doPut(req, res) {
@@ -34,17 +35,30 @@ function doPut(req, res) {
     // assuming all chunks are received in order we can just append them
     var writeStream = fs.createWriteStream(path.join(RECORDINGS_DIR, fname), { flags: 'a+' });
 
-    req.on('data', function(data) {
-      console.log('Writing data to file: ' + data.length + ' bytes');
-      writeStream.write(data);
-    });
+    // req.on('data', function(data) {
+    //   console.log('Writing data to file: ' + data.length + ' bytes');
+    //   //writeStream.write(data);
+    //   ffmpeg('data').output(writeStream, {end:true});
 
-    req.on('end', function() {
-      console.log('End of file\n');
-      writeStream.end();
-      res.writeHead(200);
-      res.end();
-    });
+    // });
+
+    // req.on('end', function() {
+    //   console.log('End of file\n');
+    //   writeStream.end();
+    //   res.writeHead(200);
+    //   res.end();
+    // });
+    // req.pipe(writeStream);
+    var proc = ffmpeg(req)
+    .toFormat('wav')
+    .on('end', function() {
+      console.log('file has been converted succesfully');
+    })
+    .on('error', function(err, stdout, stderr) {
+      console.log('ffmpeg stdout: ' + stdout);
+      console.log('ffmpeg stderr: ' + stderr);
+    })
+    .pipe(writeStream, {end:true});
   } else {
     console.log("Bad PUT request");
     error404(res);
